@@ -13,12 +13,15 @@ public class PlayerAttack : MonoBehaviour
 
     private GameObject attackArea = default;
 
+    AttackRange attackRange;
+
     void Awake()
     {
         attackArea = transform.GetChild(0).gameObject;
         anime = GetComponent<Animator>();
         isAttacking = false;
         attackArea.SetActive(false);
+        attackRange = FindObjectOfType<AttackRange>();
     }
 
     // Update is called once per frame
@@ -43,6 +46,12 @@ public class PlayerAttack : MonoBehaviour
             attackArea.SetActive(false);
             attackDelayTimer = 0;
         }
+        /*
+        if (!attackRange.isKilling)
+        {
+            attackArea.SetActive(false);
+        }
+        */
     }
     void Attack()
     {
