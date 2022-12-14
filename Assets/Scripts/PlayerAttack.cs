@@ -9,7 +9,9 @@ public class PlayerAttack : MonoBehaviour
     private Animator anime;
     private float cooldownTimer = Mathf.Infinity;
     private float attackDelayTimer = 0;
-    private bool isAttacking;
+    public bool isAttacking;
+
+    [SerializeField] private AudioClip slice;
 
     private GameObject attackArea = default;
 
@@ -55,6 +57,7 @@ public class PlayerAttack : MonoBehaviour
     }
     void Attack()
     {
+        SoundManager.instance.PlaySound(slice);
         isAttacking = true;
         attackDelayTimer = 0;
         //attackArea.SetActive(true);

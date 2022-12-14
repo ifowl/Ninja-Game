@@ -8,11 +8,13 @@ public class PlayerMovement : MonoBehaviour
     private Rigidbody2D rbody;
     private Animator anim;
     private bool grounded;
+    public bool dead;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        dead = false;
         rbody = GetComponent<Rigidbody2D>();
         anim = GetComponent<Animator>();
     }
@@ -20,19 +22,30 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float horizontalInput = Input.GetAxis("Horizontal");
-        rbody.velocity = new Vector2(horizontalInput * speed, rbody.velocity.y);
+        if (!dead)
+        {
+            float horizontalInput = Input.GetAxis("Horizontal");
+            rbody.velocity = new Vector2(horizontalInput * speed, rbody.velocity.y);
 
-        if (horizontalInput > 0.01f) //if player moving right
-            transform.localScale = new Vector3(0.5f, 0.5f, 1);
-        else if (horizontalInput < -0.01f) //player is moving left
-            transform.localScale = new Vector3(-0.5f, 0.5f, 1);
+            if (horizontalInput > 0.01f) //if player moving right
+                transform.localScale = new Vector3(0.5f, 0.5f, 1);
+            else if (horizontalInput < -0.01f) //player is moving left
+                transform.localScale = new Vector3(-0.5f, 0.5f, 1);
 
-        if(Input.GetKey(KeyCode.UpArrow) && grounded)
-            Jump();
+            anim.SetBool("isRunning", horizontalInput != 0);
+            anim.SetBool("isGrounded", grounded);
 
-        anim.SetBool("isRunning", horizontalInput != 0);
-        anim.SetBool("isGrounded", grounded);
+            if (Input.GetKey(KeyCode.UpArrow) && grounded)
+                Jump();
+        } else
+        {
+            rbody.velocity = Vector2.zero;
+        }
+
+        if (transform.position.y < -30)
+        {
+            GetComponent<Health>().TakeDamage(100);
+        }
     }
     private void Jump()
     {
